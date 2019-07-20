@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<style>
+body {margin: 60px; }
+h2   {color: red; font-family: "Impact"; text-align:center; font-size: 30px;}
+h3   {color: red; font-family: "Impact" }
+h4   {text-align: center;  color:orange; font-size: 50px; font-family: "impact";}
+p    {color: grey; text-align:center;}
+form {width: 200px; color: black; }
+label {font-weight:bold;}
+div {  }
+a{color: white; }
+div.card-header{text-align:left; background-color:papayawhip; height:50px;}
+div.card-deck{  display: inline-block; margin-bottom: 30px; margin-left:15px; text-align:center;}
+div.card-body { background-color:white;}
+span.badge{ text-align:center; }
+b { text-align: center; }
+</style>
+ </head>
+ <body>
+<div th:switch="${eggslist}">
+    <h2 th:case="true"> Esta gallina aun no ha puesto huevos. </h2>
+        <div th:case="false">
+
+
+          
+             			 <h2> Corral de la Gallina </h2>
+             					</br>
+             <h4>   <th th:text="${chicken.nombre}">  </th> </h4>
+            </br>
+                   
+                        
+        <div class="card-deck" th:each="egg : ${eggs}">    
+        <div class="card">
+        <div class="card-header">	 
+                     <span class="badge badge-pill badge-danger"><a th:href="@{/egg/edit/{id}(id=${egg.id})}"/>Editar</a></span> 
+      	</div>
+        <div class="card-body">     
+         <h3 class="card-title"><th th:text="${egg.nombre}"></th></h3>   
+          <a th:href="@{/egg/delete/{id}(id=${egg.id})}" class="btn btn-outline-success">Comer</a>    
+          &nbsp;      
+          <a th:href="@{/egg/born/{id}(id=${egg.id})}" class="btn btn-outline-warning">Nacer</a>
+        </div>
+        </div>     
+ 		</div> 
+ 		  </div>  
+ 		    </br>
+ 		    
+ 		    			<span th:if="${eggslist == false}">  <h3>Poner Huevos </h3></span>
+ 		    
+               <form th:action="@{|/chicken/edit/${chickenid}|}" th:object="${egg}" method="post">
+               
+               	<span th:if="${egg.id != null}">  <h2>Editar Huevo </h2></br></span> 
+               
+ 				 <div class="form-group" >
+ 			
+ 			<label for="nombreGranja">Nombre del Huevo</label>
+ 			
+   
+   
+    	<td> <input type="text" class="form-control" th:field="*{nombre}" placeholder="Ingresar nombre"> </td>	
+     
+     
+         <input type="hidden" th:field="*{id}">
+		  </div>
+
+			<div>
+            <button type="submit" class="btn btn-danger" th:value="${egg.id != null }? 'Modificar' : 'Poner' "> Poner</button>
+        </div>
+        
+</form>
+
+
+      
+                     <br/>  
+      						<a class= "btn btn-outline-warning" th:href="@{/addchicken/{id}(id=${farmid})}"/>Regresar a la granja</a> 
+      
+      
+				<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
