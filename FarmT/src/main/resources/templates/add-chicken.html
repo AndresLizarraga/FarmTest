@@ -51,7 +51,21 @@ b { text-align: center; }
 					
            <a  th:href="@{/chicken/edit/{id}(id=${chicken.id})}" class="btn btn-outline-success">Entrar </a>
                         &nbsp; 
-             <a th:href="@{/chicken/delete/{id}(id=${chicken.id})}" class="btn btn-outline-danger" >Matar</a>           
+             <a th:href="@{/chicken/delete/{id}(id=${chicken.id})}" class="btn btn-outline-danger" >Matar</a>   
+             &nbsp; 
+             <div class="btn-group">
+  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Granjas
+  </button>
+  <div class="dropdown-menu" >
+    <a class="dropdown-item" th:each="farm : ${farms}" th:href="@{/chicken/{idc}/farm/{id}(id=${farm.id},idc=${chicken.id})}" th:text="${farm.nombre}"></a>
+  
+</div>
+</div>
+             
+                        <!--  <a th:href="@{/chicken/changefarm/{id}(id=${chicken.id})}" class="btn btn-outline-danger" >Cambiar Granja</a>    -->
+
+       
         </div>
                  
                </div>

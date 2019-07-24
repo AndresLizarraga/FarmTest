@@ -1,10 +1,11 @@
 package com.accenture.Farm.controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
+import java.util.List;
+
+
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -79,6 +80,7 @@ public class FarmController {
     	return "add-user";
     }
     
+    
     @PostMapping(path="/adduser")
     public String addUser(User user, Model model) {
     	System.out.println( "cantidad de users: " +userRepo.count());
@@ -91,9 +93,7 @@ public class FarmController {
     	user.setAuthority(autho);
     	String encodedpassword = new BCryptPasswordEncoder().encode(user.getPassword());
     	user.setPassword(encodedpassword);
-    	
     	user.setEnabled(true);
-    	
     	userRepo.save(user);
     	System.out.println( "cantidad de users: " +userRepo.count());
     	model.addAttribute("users", userRepo.findAll());
@@ -108,6 +108,7 @@ public class FarmController {
         List<Eggs> eggsfound=daoeggs.findByChickens(chicken);
         model.addAttribute("chic", new Chickens());
         model.addAttribute("farm", farm);
+        model.addAttribute("farms", daofarm.findAll());
         model.addAttribute("farmid", id);
         model.addAttribute("chickens", chickensfound);
         model.addAttribute("chickenlist", daochickens.findByFarm(farm).isEmpty());
@@ -140,6 +141,44 @@ public class FarmController {
         model.addAttribute("eggsnumber", eggsfound.size());
         model.addAttribute("chickenlist", daochickens.findAll());
         return "add-chicken";
+    }
+    
+    //METODO PARA EDITAR CHICKENS POR ID
+    @GetMapping(path="/chicken/changefarm/{id}")
+    @Secured("ROLE_ADMIN")
+    public String changeFarm(@PathVariable("id") long id, Model model, Farm farm) {
+    	
+        Chickens chick = daochickens.findById(id).get();
+//        
+//        chick.setFarm(farm);
+//        model.addAttribute("farm", chick.getFarm());
+        model.addAttribute("farmid", chick.getFarm().getId());
+        model.addAttribute("chickenid", chick.getId());
+        model.addAttribute("chic", chick);
+          model.addAttribute("farms", daofarm.findAll());
+        model.addAttribute("chickenlist", daochickens.findAll());
+        return "change-farm";
+    }
+    
+  //METODO PARA EDITAR CHICKENS POR ID
+    @GetMapping(path="/chicken/{idc}/farm/{id}")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_ACTUATOR"})
+    public String changeFarmChic(@PathVariable("id") long id, @PathVariable("idc") long idc, Model model) {
+    	
+    	Farm farm1 = daofarm.findById(id).get();
+    	
+        Chickens chick = daochickens.findById(idc).get();
+//        daochickens.delete(chick);
+        chick.setFarm(farm1);
+        daochickens.save(chick);
+        
+//        model.addAttribute("farm", chick.setFarm(farm));
+      
+        model.addAttribute("chic", chick);
+        model.addAttribute("chickenid", chick.getId());
+        model.addAttribute("farms", daofarm.findAll());
+       
+        return "index";
     }
     
     //METODO PARA TRAER HUEVOS POR CHICKENS ID 
@@ -218,6 +257,7 @@ public class FarmController {
     public String deleteChicken(@PathVariable("id") long id, Model model) {
         Chickens chicken = daochickens.findById(id).get();
         daochickens.delete(chicken);
+        
     	model.addAttribute("chickens", daochickens.findAll());
 //    	model.addAttribute("farm", farm);
     	return "redirect:/addchicken/" +chicken.getFarm().getId();

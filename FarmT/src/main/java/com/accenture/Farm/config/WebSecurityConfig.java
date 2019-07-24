@@ -32,6 +32,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	        .antMatchers().access("hasRole('USER')")
                 .anyRequest().authenticated()
                 .and()
+                .exceptionHandling().accessDeniedPage("/errorPage")
+                .and()
             .formLogin()
                 .loginPage("/login")
                 .permitAll()
@@ -42,9 +44,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .logout()
                 .permitAll()
-                .logoutSuccessUrl("/login?logout")
-        		.and()
-                .exceptionHandling().accessDeniedPage("/errorPage");
+                .logoutSuccessUrl("/login?logout");
+        		
+                
         
         
         http.csrf().disable();
