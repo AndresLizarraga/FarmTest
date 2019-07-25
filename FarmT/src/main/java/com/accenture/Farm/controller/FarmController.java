@@ -148,14 +148,13 @@ public class FarmController {
     @Secured("ROLE_ADMIN")
     public String changeFarm(@PathVariable("id") long id, Model model, Farm farm) {
     	
-        Chickens chick = daochickens.findById(id).get();
-//        
+        Chickens chick = daochickens.findById(id).get(); 
 //        chick.setFarm(farm);
 //        model.addAttribute("farm", chick.getFarm());
         model.addAttribute("farmid", chick.getFarm().getId());
         model.addAttribute("chickenid", chick.getId());
         model.addAttribute("chic", chick);
-          model.addAttribute("farms", daofarm.findAll());
+        model.addAttribute("farms", daofarm.findAll());
         model.addAttribute("chickenlist", daochickens.findAll());
         return "change-farm";
     }
@@ -168,12 +167,8 @@ public class FarmController {
     	Farm farm1 = daofarm.findById(id).get();
     	
         Chickens chick = daochickens.findById(idc).get();
-//        daochickens.delete(chick);
         chick.setFarm(farm1);
         daochickens.save(chick);
-        
-//        model.addAttribute("farm", chick.setFarm(farm));
-      
         model.addAttribute("chic", chick);
         model.addAttribute("chickenid", chick.getId());
         model.addAttribute("farms", daofarm.findAll());
@@ -195,7 +190,8 @@ public class FarmController {
         model.addAttribute("farmid", chick.getFarm().getId());
         return "add-eggs";
     }
-   //METODO PARA CREAR HUEVOS POR CHICKEN ID
+    
+    //METODO PARA CREAR HUEVOS POR CHICKEN ID
     @PostMapping(path="/chicken/edit/{id}")
     @Secured("ROLE_ADMIN")
     public String addEgg(@PathVariable("id") long id, Model model, Eggs egg) {
